@@ -40,6 +40,6 @@ export class CdkLambdaApigwStack extends cdk.Stack {
     })
     
     new cdk.CfnOutput(this, "Url", { value: api.url })
-    
+
   }
 }
