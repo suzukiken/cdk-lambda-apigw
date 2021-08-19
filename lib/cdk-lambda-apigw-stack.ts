@@ -15,14 +15,22 @@ export class CdkLambdaApigwStack extends cdk.Stack {
     })
     
     const integration = new apigateway.LambdaIntegration(lambda_function)
-    const api = new apigateway.RestApi(this, 'RestApi', {
+    const api = new apigateway.RestApi(this, 'RestApi', 
+      /*{
       defaultCorsPreflightOptions: {
         allowOrigins: apigateway.Cors.ALL_ORIGINS,
         allowMethods: apigateway.Cors.ALL_METHODS
       }
-    })
+      }*/
+    )
     
     const v1 = api.root.addResource('v1');
+    
+    v1.addCorsPreflight({
+      allowOrigins: apigateway.Cors.ALL_ORIGINS,
+      allowMethods: apigateway.Cors.ALL_METHODS
+    })
+    
     const get_method = v1.addMethod('GET', integration, { apiKeyRequired: true })
 
     const plan = api.addUsagePlan('UsagePlan', {
@@ -33,6 +41,7 @@ export class CdkLambdaApigwStack extends cdk.Stack {
     })
     
     const key = api.addApiKey('ApiKey')
+    
     plan.addApiKey(key)
     
     plan.addApiStage({
